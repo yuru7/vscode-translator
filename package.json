@@ -1,0 +1,71 @@
+{
+  "name": "vscode-translator",
+  "displayName": "Translator",
+  "description": "Translate selected text with Google Translate and show the result in a hover.",
+  "version": "0.0.1",
+  "publisher": "yuru7",
+  "engines": {
+    "vscode": "^1.92.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "translator.translate",
+        "title": "Translator: Translate Selection"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "translator.translate",
+        "key": "alt+t",
+        "when": "editorTextFocus"
+      }
+    ],
+    "configuration": {
+      "title": "Translator",
+      "properties": {
+        "translator.sourceLanguage": {
+          "type": "string",
+          "default": "auto",
+          "description": "Source language code. Use 'auto' or an empty value for automatic language detection."
+        },
+        "translator.targetLanguage": {
+          "type": "string",
+          "default": "ja",
+          "description": "Target language code."
+        },
+        "translator.reverseLanguage": {
+          "type": "string",
+          "default": "en",
+          "description": "Target language when the detected source language equals the configured target language."
+        }
+      }
+    }
+  },
+  "packageManager": "pnpm@11.20.0",
+  "scripts": {
+    "vscode:prepublish": "pnpm run build",
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "compile": "tsc -p ./ --noEmit",
+    "lint": "eslint src test",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@types/node": "^22.13.10",
+    "@types/vscode": "^1.92.0",
+    "@vscode/vsce": "^3.9.2",
+    "esbuild": "^0.25.1",
+    "eslint": "^9.22.0",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1",
+    "vitest": "^3.0.8"
+  }
+}

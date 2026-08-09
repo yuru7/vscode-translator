@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "pnpm: build",
+      "type": "shell",
+      "command": "pnpm run build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "pnpm: watch",
+      "type": "shell",
+      "command": "pnpm run watch",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "vsce: package",
+      "type": "shell",
+      "command": "pnpm exec vsce package --no-dependencies --allow-missing-repository",
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}

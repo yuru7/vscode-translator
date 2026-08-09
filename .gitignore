@@ -1,0 +1,9 @@
+node_modules/
+.pnpm-store/
+dist/
+*.vsix
+.vscode-test/
+*.log
+.DS_Store
+package-lock.json
+.local/
