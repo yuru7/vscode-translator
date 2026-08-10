@@ -1,8 +1,8 @@
 {
   "name": "vscode-translator",
   "displayName": "Translator",
-  "description": "Translate selected text with Google Translate and show the result in a hover.",
-  "version": "0.0.1",
+  "description": "Translate selected text with Google Translate. Show the result in a hover or insert it below the selection.",
+  "version": "0.0.3",
   "publisher": "yuru7",
   "engines": {
     "vscode": "^1.92.0"
@@ -17,12 +17,22 @@
       {
         "command": "translator.translate",
         "title": "Translator: Translate Selection"
+      },
+      {
+        "command": "translator.insertTranslation",
+        "title": "Translator: Insert Translation Below"
       }
     ],
     "keybindings": [
       {
         "command": "translator.translate",
         "key": "alt+t",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "translator.insertTranslation",
+        "key": "shift+alt+t",
+        "mac": "shift+alt+t",
         "when": "editorTextFocus"
       }
     ],

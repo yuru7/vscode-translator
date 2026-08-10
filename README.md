@@ -1,23 +1,31 @@
 # Translator
 
-Cursor / VS Code 向けのシンプルな翻訳拡張機能です。エディターで文字列を選択し、ショートカットを押すと Google 翻訳の結果を標準 Hover に一時表示します。
+VS Code / Cursor 向けのシンプルな翻訳拡張機能です。エディターで文字列を選択し、ショートカットを押すと Google 翻訳の結果を Hover 表示するか、選択範囲の直下へ挿入できます。
 
 ## 使い方
 
 1. 翻訳したい文字列を選択する（未選択ならカーソル行を行末→行頭の向きで選択してから翻訳）
-2. `Alt+T` を押す（コマンド: **Translator: Translate Selection**）
-3. 選択範囲付近の Hover に翻訳結果が表示される
+2. 次のどちらかで翻訳する
+   - `Alt+T` … 選択範囲付近の Hover に翻訳結果を表示（コマンド: **Translator: Translate Selection**）
+   - `Shift+Alt+T` … 翻訳範囲の直下に行挿入（コマンド: **Translator: Insert Translation Below**）
 
-表示例:
+### Hover 表示例 (`Alt+T`)
 
 ```text
 [Translation: en -> ja]
 こんにちは、世界
 ```
 
-Alt+T 時は、現在ドキュメントの scheme+language 向けに HoverProvider を再登録してスコアを最大化し、翻訳結果を Hover に表示します。他拡張の Hover と結合される場合があり、順番は環境によって末尾寄りになることもあります。
+Alt+T 時は、翻訳結果をホバーに表示します。他拡張のホバー表示と結合される場合があり、順番は環境によって末尾寄りになることもあります。
 
-翻訳結果は表示のみです。原文の置換、挿入、クリップボードへの自動コピー、履歴保存は行いません。
+### 挿入例 (`Shift+Alt+T`)
+
+```text
+Hello, world
+----- Translation -----
+こんにちは、世界
+-----------------------
+```
 
 ## 設定
 

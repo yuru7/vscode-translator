@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { insertTranslationCommand } from './commands/insertTranslationCommand';
 import { translateSelectionCommand } from './commands/translateSelectionCommand';
 import { TranslationHoverPresenter } from './hover/TranslationHoverPresenter';
 import { getOutputChannel } from './output/logger';
@@ -13,6 +14,12 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand('translator.translate', () =>
       translateSelectionCommand({ client, hoverPresenter })
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('translator.insertTranslation', () =>
+      insertTranslationCommand({ client })
     )
   );
 

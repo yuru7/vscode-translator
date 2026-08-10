@@ -1,19 +1,23 @@
 import * as vscode from 'vscode';
 import { TranslationError } from '../errors/TranslationError';
-import type { TranslationHoverPresenter } from '../hover/TranslationHoverPresenter';
 import { logError } from '../output/logger';
 import type { TranslateClient } from '../translate/TranslateClient';
+import {
+  buildInsertText,
+  needsTrailingNewlineForCursor,
+  resolveCursorLineAfterInsert,
+  resolveInsertPosition,
+} from './formatInsertedTranslation';
 import { resolveTranslateTarget } from './resolveTranslateTarget';
 import { runTranslation } from './runTranslation';
 import { userFacingTranslationError } from './userFacingTranslationError';
 
-export interface TranslateSelectionDeps {
+export interface InsertTranslationDeps {
   client: TranslateClient;
-  hoverPresenter: TranslationHoverPresenter;
 }
 
-export async function translateSelectionCommand(
-  deps: TranslateSelectionDeps
+export async function insertTranslationCommand(
+  deps: InsertTranslationDeps
 ): Promise<void> {
   const editor = vscode.window.activeTextEditor;
   if (!editor) {
@@ -25,8 +29,6 @@ export async function translateSelectionCommand(
     await vscode.window.showInformationMessage('Nothing to translate.');
     return;
   }
-
-  deps.hoverPresenter.clear();
 
   try {
     const outcome = await runTranslation(deps.client, target.text);
@@ -40,21 +42,37 @@ export async function translateSelectionCommand(
       return;
     }
 
-    const markdown = new vscode.MarkdownString();
-    markdown.appendMarkdown(
-      `**[Translation: \`${outcome.sourceLanguage}\` -> \`${outcome.targetLanguage}\`]**\n\n`
+    const insertPosition = resolveInsertPosition(active.document, target.range);
+    const appendTrailingNewline = needsTrailingNewlineForCursor(
+      active.document,
+      insertPosition
     );
-    markdown.appendText(outcome.translatedText);
-    markdown.isTrusted = false;
+    const insertText = buildInsertText(
+      outcome.translatedText,
+      appendTrailingNewline
+    );
+    const cursorLine = resolveCursorLineAfterInsert(
+      insertPosition.line,
+      outcome.translatedText
+    );
 
-    try {
-      await deps.hoverPresenter.show(active, target.range, markdown);
-    } catch (error) {
-      logError('Failed to show translation hover.', error);
+    const applied = await active.edit((editBuilder) => {
+      editBuilder.insert(insertPosition, insertText);
+    });
+
+    if (!applied) {
       await vscode.window.showErrorMessage(
-        'Translator: Translated successfully, but failed to show the hover.'
+        'Translator: Failed to insert the translation.'
       );
+      return;
     }
+
+    const cursor = new vscode.Position(cursorLine, 0);
+    active.selection = new vscode.Selection(cursor, cursor);
+    active.revealRange(
+      new vscode.Range(cursor, cursor),
+      vscode.TextEditorRevealType.InCenterIfOutsideViewport
+    );
   } catch (error) {
     logError('Translation failed.', error);
     const message =

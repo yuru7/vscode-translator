@@ -1,8 +1,11 @@
 # Change Log
 
+## 0.0.3
+
+- `Shift+Alt+T` で翻訳結果を翻訳範囲の直下へ行挿入
+
 ## 0.0.2
 
-- Hover 表示に復帰
 - Alt+T 時に scheme+language で HoverProvider を再登録してスコア最大化
 
 ## 0.1.0
